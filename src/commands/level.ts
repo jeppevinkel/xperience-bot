@@ -73,7 +73,7 @@ export async function execute(interaction : CommandInteraction) {
         ctx.font = '30px sans-serif'
         ctx.fillText(`Level: ${userData.level}    XP: ${curXp}/${neededXp}    Rank: ${rank}`, 160, 120)
 
-        drawProgressBar(ctx, (userData.xp / nextLevel.xp) * 100)
+        drawProgressBar(ctx, (curXp / neededXp) * 100)
     } else {
         ctx.font = '30px sans-serif'
         ctx.fillText(`Level: ${userData.level}    XP: ${curXp}    Rank: ${rank}`, 160, 120)
