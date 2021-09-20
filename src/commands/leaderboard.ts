@@ -1,9 +1,10 @@
 import {SlashCommandBuilder} from '@discordjs/builders'
 import {CommandInteraction, GuildMember, MessageAttachment} from 'discord.js'
 import Command from '../models/command'
-import {Canvas, createCanvas, loadImage} from 'canvas'
+import {Canvas, createCanvas, loadImage, registerFont} from 'canvas'
 import {circlePath, ColorPalette, drawProgressBar, fillRoundedRect, roundedRectanglePath} from '../utils/canvasHelpers'
 import Level from "../models/level";
+registerFont('fonts/TitilliumWeb-Regular.ttf', {family: 'Titillium Web'})
 
 export const data = new SlashCommandBuilder()
     .setName('leaderboard')
@@ -59,7 +60,7 @@ export async function execute(interaction : CommandInteraction) {
             ctx.fillStyle = ColorPalette.background
             fillRoundedRect(ctx, 0, 0, canvas.width, canvas.height, 20)
 
-            ctx.font = '40px sans-serif'
+            ctx.font = '40px Titillium Web'
             ctx.fillStyle = ColorPalette.red
             ctx.fillText("No one has talked yet ya dingus", 20, (canvas.height/2) + (40/2))
 
@@ -85,7 +86,7 @@ export async function execute(interaction : CommandInteraction) {
             ctx.restore()
 
             const fontSize = entryHeight/2
-            ctx.font = `${fontSize}px sans-serif`
+            ctx.font = `${fontSize}px Titillium Web`
             ctx.fillStyle = getRankCol(i)
             const rankText = `#${i+1}`
             const rankTextMeasure = ctx.measureText(rankText)

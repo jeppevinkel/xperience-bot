@@ -52,7 +52,11 @@ export async function execute(message : Message) {
                 if (settings.levelAlerts.enabled) {
                     const alertChannel = message.guild.channels.cache.get(settings.levelAlerts.alertChannel) as TextChannel ?? await message.guild.channels.fetch(settings.levelAlerts.alertChannel) as TextChannel
 
-                    await alertChannel.send(settings.levelAlerts.alertMessage.replace(/{displayName}/g, message.member.toString()).replace(/{level}/g, userData.level))
+                    try {
+                        await alertChannel.send(settings.levelAlerts.alertMessage.replace(/{displayName}/g, message.member.toString()).replace(/{level}/g, userData.level))
+                    } catch (err) {
+                        console.log(`[Send message (${alertChannel.name})]`, err)
+                    }
                 }
 
                 console.log('You levelled up to ', userData.level)
