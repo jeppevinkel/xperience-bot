@@ -23,8 +23,8 @@ export async function execute(interaction : CommandInteraction) {
     const key = `${interaction.guild.id}-${user.id}`
 
     const userData = interaction.client.levels.ensure(key, {
-        user: interaction.user.id,
-        guild: interaction.guild.id,
+        user: user.id,
+        guild: user.id,
         xp: 0,
         level: 0,
         lastMessage: 0
@@ -32,6 +32,20 @@ export async function execute(interaction : CommandInteraction) {
 
     const levels = interaction.client.settings.get(interaction.guild.id, 'levels') as Level[]
     const nextLevel = levels.find((l, i) => i == userData.level)
+
+    let curXp = 0;
+    let neededXp = 0;
+
+    if (userData.level == 0){
+        curXp = userData.xp
+        if (nextLevel != undefined)
+            neededXp = nextLevel.xp
+    } else {
+        const curLevel = levels.find((l, i) => i == (userData.level - 1))
+        curXp = userData.xp - curLevel.xp
+        if (nextLevel != undefined)
+            neededXp = nextLevel.xp - curLevel.xp
+    }
 
     const canvas = createCanvas(800, 200)
     const ctx = canvas.getContext('2d')
@@ -57,12 +71,12 @@ export async function execute(interaction : CommandInteraction) {
 
     if (nextLevel != undefined) {
         ctx.font = '30px sans-serif'
-        ctx.fillText(`Level: ${userData.level}    XP: ${userData.xp}/${nextLevel.xp}    Rank: ${rank}`, 160, 120)
+        ctx.fillText(`Level: ${userData.level}    XP: ${curXp}/${neededXp}    Rank: ${rank}`, 160, 120)
 
         drawProgressBar(ctx, (userData.xp / nextLevel.xp) * 100)
     } else {
         ctx.font = '30px sans-serif'
-        ctx.fillText(`Level: ${userData.level}    XP: ${userData.xp}    Rank: ${rank}`, 160, 120)
+        ctx.fillText(`Level: ${userData.level}    XP: ${curXp}    Rank: ${rank}`, 160, 120)
 
         drawProgressBar(ctx, 100)
     }
