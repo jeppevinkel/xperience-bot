@@ -23,6 +23,8 @@ export async function execute(interaction : ChatInputCommandInteraction) {
     if (interaction.member instanceof GuildMember) {
         const me = interaction.options.getBoolean('me', false) ?? false
 
+        await interaction.deferReply();
+
         let users: any[]
 
         if (me) {
@@ -67,7 +69,7 @@ export async function execute(interaction : ChatInputCommandInteraction) {
 
             const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: `${interaction.guild.toString()}-leaderboard.png`})
 
-            await interaction.reply({files: [attachment]})
+            await interaction.editReply({files: [attachment]})
             return
         }
 
@@ -118,7 +120,7 @@ export async function execute(interaction : ChatInputCommandInteraction) {
 
         const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: `${interaction.guild.toString()}-leaderboard.png`})
 
-        await interaction.reply({files: [attachment]})
+        await interaction.editReply({files: [attachment]})
     }
 }
 
