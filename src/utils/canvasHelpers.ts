@@ -1,4 +1,4 @@
-import {NodeCanvasRenderingContext2D} from "canvas";
+import {CanvasRenderingContext2D} from "canvas";
 
 export const ColorPalette = {
     background: '#2f2f2f',
@@ -8,7 +8,7 @@ export const ColorPalette = {
     red: '#FFAAA7'
 }
 
-export function roundedRectanglePath(ctx: NodeCanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+export function roundedRectanglePath(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
     ctx.beginPath();
     ctx.moveTo(x + radius, y);
     ctx.lineTo(x + width - radius, y);
@@ -22,7 +22,7 @@ export function roundedRectanglePath(ctx: NodeCanvasRenderingContext2D, x: numbe
     ctx.closePath();
 }
 
-export function fillRoundedRect(ctx: NodeCanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
+export function fillRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
     ctx.save()
     roundedRectanglePath(ctx, x, y, width, height, radius)
     ctx.clip()
@@ -30,13 +30,13 @@ export function fillRoundedRect(ctx: NodeCanvasRenderingContext2D, x: number, y:
     ctx.restore()
 }
 
-export function circlePath(ctx: NodeCanvasRenderingContext2D, x: number, y: number, radius: number) {
+export function circlePath(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
     ctx.beginPath()
     ctx.arc(x, y, radius, 0, Math.PI * 2, true)
     ctx.closePath()
 }
 
-export function drawProgressBar(ctx: NodeCanvasRenderingContext2D, progress: number) {
+export function drawProgressBar(ctx: CanvasRenderingContext2D, progress: number) {
     ctx.save()
     progress = Math.min(progress, 100)
     const width = 600
