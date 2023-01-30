@@ -116,45 +116,6 @@ export async function execute(interaction : ChatInputCommandInteraction) {
             ctx.fillText(levelText, levelTextX, y + (entryHeight/2) + (fontSize/2))
         }
 
-        // const userData = interaction.client.levels.ensure(key, {
-        //     user: interaction.user.id,
-        //     guild: interaction.guild.id,
-        //     xp: 0,
-        //     level: 0,
-        //     lastMessage: 0
-        // })
-        //
-        // const levels = interaction.client.settings.get(interaction.guild.id, 'levels') as Level[]
-        // const nextLevel = levels.find(l => l.number = userData.level + 1)
-        //
-        // const canvas = createCanvas(800, 200)
-        // const ctx = canvas.getContext('2d')
-        //
-        // ctx.fillStyle = ColorPalette.background
-        // fillRoundedRect(ctx, 0, 0, canvas.width, canvas.height, 20)
-        //
-        // ctx.save()
-        // circlePath(ctx, 75, 75, 65)
-        // ctx.clip()
-        // const avatar = await loadImage(interaction.user.displayAvatarURL({format: 'jpg'}))
-        // ctx.drawImage(avatar, 10, 10, 130, 130)
-        // ctx.restore()
-        //
-        // ctx.font = '40px sans-serif'
-        // ctx.fillStyle = ColorPalette.red
-        // ctx.fillText(interaction.user.username + '#' + interaction.user.discriminator, 160, 60)
-        //
-        // ctx.font = '30px sans-serif'
-        // ctx.fillText(`Level: ${userData.level}    XP: ${userData.xp}`, 160, 120)
-        //
-        // if (nextLevel != undefined) {
-        //     drawProgressBar(ctx, (userData.xp/nextLevel.xp) * 100)
-        // } else {
-        //     drawProgressBar(ctx, 100)
-        // }
-        //
-        // const attachment = new MessageAttachment(canvas.toBuffer(), `${interaction.member.toString()}-level.png`)
-
         const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: `${interaction.guild.toString()}-leaderboard.png`})
 
         await interaction.reply({files: [attachment]})
