@@ -168,6 +168,7 @@ export const data = new SlashCommandBuilder()
                         return option
                             .setName('channel')
                             .setDescription('The channel where alerts are displayed')
+                            .addChannelTypes(ChannelType.GuildText | ChannelType.GuildAnnouncement)
                     })
                     .addStringOption(option => {
                         return option
@@ -279,6 +280,10 @@ export async function execute(interaction : ChatInputCommandInteraction) {
                         }
 
                         // await interaction.reply(`The level has been edited\n\`\`\`json\n${JSON.stringify(newLevel, null, 4)}\n\`\`\``)
+                        await interaction.reply({
+                            content: "I'm afraid I haven't implemented this yet...",
+                            ephemeral: true,
+                        })
                         return
                     }
                     break
@@ -298,7 +303,7 @@ export async function execute(interaction : ChatInputCommandInteraction) {
                             levelAlerts.enabled = enabled
                         }
                         if (channel != null) {
-                            if (channel.type == ChannelType.GuildText) {
+                            if (channel.type == ChannelType.GuildText || ChannelType.GuildAnnouncement) {
                                 levelAlerts.alertChannel = channel.id
                             } else {
                                 errors.push('You must choose a text channel!')
