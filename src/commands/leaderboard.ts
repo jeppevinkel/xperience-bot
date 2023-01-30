@@ -1,5 +1,5 @@
 import {SlashCommandBuilder} from '@discordjs/builders'
-import {CommandInteraction, GuildMember, MessageAttachment} from 'discord.js'
+import {AttachmentBuilder, ChatInputCommandInteraction, CommandInteraction, GuildMember} from 'discord.js'
 import Command from '../models/command'
 import {Canvas, createCanvas, loadImage, registerFont} from 'canvas'
 import {circlePath, ColorPalette, drawProgressBar, fillRoundedRect, roundedRectanglePath} from '../utils/canvasHelpers'
@@ -15,10 +15,11 @@ export const data = new SlashCommandBuilder()
             .setDescription('Center leaderboard on your position')
             .setRequired(false)
     })
+    .setDMPermission(false)
 
 export const admin = false
 
-export async function execute(interaction : CommandInteraction) {
+export async function execute(interaction : ChatInputCommandInteraction) {
     if (interaction.member instanceof GuildMember) {
         const me = interaction.options.getBoolean('me', false) ?? false
 
@@ -64,7 +65,7 @@ export async function execute(interaction : CommandInteraction) {
             ctx.fillStyle = ColorPalette.red
             ctx.fillText("No one has talked yet ya dingus", 20, (canvas.height/2) + (40/2))
 
-            const attachment = new MessageAttachment(canvas.toBuffer(), `${interaction.guild.toString()}-leaderboard.png`)
+            const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: `${interaction.guild.toString()}-leaderboard.png`})
 
             await interaction.reply({files: [attachment]})
             return
@@ -81,7 +82,7 @@ export async function execute(interaction : CommandInteraction) {
             ctx.save()
             roundedRectanglePath(ctx, x, y, entryHeight, entryHeight, 20)
             ctx.clip()
-            const avatar = await loadImage(user.displayAvatarURL({format: 'jpg'}))
+            const avatar = await loadImage(user.displayAvatarURL({extension: 'jpg'}))
             ctx.drawImage(avatar, x, y, entryHeight, entryHeight)
             ctx.restore()
 
@@ -154,7 +155,7 @@ export async function execute(interaction : CommandInteraction) {
         //
         // const attachment = new MessageAttachment(canvas.toBuffer(), `${interaction.member.toString()}-level.png`)
 
-        const attachment = new MessageAttachment(canvas.toBuffer(), `${interaction.guild.toString()}-leaderboard.png`)
+        const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: `${interaction.guild.toString()}-leaderboard.png`})
 
         await interaction.reply({files: [attachment]})
     }

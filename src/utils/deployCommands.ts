@@ -1,8 +1,16 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
-import { ApplicationCommand, Client, Guild, GuildApplicationCommandPermissionData, Permissions } from 'discord.js';
-import { ApplicationCommandPermissionTypes } from "discord.js/typings/enums";
+// import { REST } from '@discordjs/rest';
+// import { Routes } from 'discord-api-types/v9';
+import {
+    ApplicationCommand, ApplicationCommandPermissionType,
+    Client,
+    Guild,
+    Permissions,
+    PermissionsBitField,
+    REST,
+    Routes
+} from 'discord.js'
+// import { ApplicationCommandPermissionTypes } from "discord.js/typings/enums";
 import fs from 'fs';
 
 import Command from "../models/command";
@@ -40,58 +48,60 @@ export async function RegisterCommandsForGuild(guild : Guild) {
     const res = await RegisterRawCommandsForGuild(guild.client, guild.id);
 
     //Fix Permission
-    console.log(`[${guild.name}] Applying Permissions`);
-    const fullPermissions = await CalculateAdminPermissions(guild, res);
-
-    await guild.commands.permissions.set({
-        fullPermissions
-    });
+    // console.log(`[${guild.name}] Applying Permissions`);
+    // const fullPermissions = await CalculateAdminPermissions(guild, res);
+    //
+    // await guild.commands.permissions.set({
+    //     fullPermissions
+    // });
 
     console.log(`[${guild.name}] Commands Registered`);
 }
 
 //Used when admin roles are changed etc.
-export async function UpdatePermissionsForGuild(guild : Guild) {
-    await guild.commands.fetch()
-    console.log(`[${guild.name}] Updating Permissions`);
-    const appCommands = [...guild.commands.cache.values()];
-    const fullPermissions = await CalculateAdminPermissions(guild, appCommands);
-
-    const r = await guild.commands.permissions.set({
-        fullPermissions
-    });
-
-    console.log(`[${guild.name}] Updated Permissions`);
-
-    return r;
-}
+// export async function UpdatePermissionsForGuild(guild : Guild) {
+//     await guild.commands.fetch()
+//     console.log(`[${guild.name}] Updating Permissions`);
+//     const appCommands = [...guild.commands.cache.values()];
+//     const fullPermissions = await CalculateAdminPermissions(guild, appCommands);
+//
+//     const r = await guild.commands.permissions.set({
+//         token: '',
+//         permissions: fullPermissions,
+//         command: '',
+//     });
+//
+//     console.log(`[${guild.name}] Updated Permissions`);
+//
+//     return r;
+// }
 
 //Calculate the perms object
-async function CalculateAdminPermissions(guild : Guild, appCommands : ApplicationCommand[]) : Promise<GuildApplicationCommandPermissionData[]> {
-    const perms : GuildApplicationCommandPermissionData[] = [];
-
-    const adminRoles = [...guild.roles.cache.filter(x => x.permissions.has(Permissions.FLAGS.ADMINISTRATOR)).values()];
-
-    if(!adminRoles || adminRoles.length == 0) return perms;
-
-    for(const cmd of commands.values()) {
-        if(cmd.admin) {
-            const appCmd = appCommands.find(x => x.name == cmd.data.name);
-            if(!appCmd) continue;
-
-            perms.push({
-                id: appCmd.id,
-                permissions: adminRoles.map(role => {return {
-                    id: role.id,
-                    permission: true,
-                    type: 'ROLE'
-                }})
-            })
-        }
-    }
-
-    return perms;
-}
+// async function CalculateAdminPermissions(guild : Guild, appCommands : ApplicationCommand[]) : Promise<GuildApplicationCommandPermissionData[]> {
+//     const perms : GuildApplicationCommandPermissionData[] = [];
+//
+//     const adminRoles = [...guild.roles.cache.filter(x => x.permissions.has(PermissionsBitField.Flags.Administrator)).values()];
+//
+//     if(!adminRoles || adminRoles.length == 0) return perms;
+//
+//     for(const cmd of commands.values()) {
+//         if(cmd.admin) {
+//             const appCmd = appCommands.find(x => x.name == cmd.data.name);
+//             if(!appCmd) continue;
+//
+//             perms.push({
+//                 id: appCmd.id,
+//                 permissions: adminRoles.map(role => {return {
+//                     id: role.id,
+//                     permission: true,
+//                     type: ApplicationCommandPermissionType.Role
+//                 }})
+//             })
+//         }
+//     }
+//
+//     return perms;
+// }
 
 //Send the instructions to register commands
 async function RegisterRawCommandsForGuild(client : Client<true>, guildId : string) : Promise<ApplicationCommand[]> {

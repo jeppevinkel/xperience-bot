@@ -1,5 +1,5 @@
 import {SlashCommandBuilder} from '@discordjs/builders'
-import {CommandInteraction, Guild, GuildMember, MessageAttachment} from 'discord.js'
+import {CommandInteraction, Guild, GuildMember, Attachment, AttachmentBuilder} from 'discord.js'
 import Command from '../models/command'
 import {Canvas, createCanvas, loadImage, registerFont} from 'canvas'
 import {circlePath, ColorPalette, drawProgressBar, fillRoundedRect, roundedRectanglePath} from '../utils/canvasHelpers'
@@ -15,6 +15,7 @@ export const data = new SlashCommandBuilder()
             .setDescription('Member to view level of')
             .setRequired(false)
     })
+    .setDMPermission(false)
 
 export const admin = false
 
@@ -57,7 +58,7 @@ export async function execute(interaction : CommandInteraction) {
     ctx.save()
     circlePath(ctx, 75, 75, 65)
     ctx.clip()
-    const avatar = await loadImage(user.displayAvatarURL({format: 'jpg'}))
+    const avatar = await loadImage(user.displayAvatarURL({extension: 'jpg'}))
     ctx.drawImage(avatar, 10, 10, 130, 130)
     ctx.restore()
 
@@ -82,7 +83,7 @@ export async function execute(interaction : CommandInteraction) {
         drawProgressBar(ctx, 100)
     }
 
-    const attachment = new MessageAttachment(canvas.toBuffer(), `${user.toString()}-level.png`)
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), {name: `${user.toString()}-level.png`})
 
     await interaction.reply({files: [attachment]})
 }

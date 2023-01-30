@@ -1,7 +1,6 @@
-import {SlashCommandBuilder} from '@discordjs/builders'
-import {CommandInteraction} from 'discord.js'
+import {ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder, ChannelType} from 'discord.js'
 import Level from "../models/level";
-import {ChannelType} from "discord-api-types";
+// import {ChannelType} from "discord-api-types";
 
 export const data = new SlashCommandBuilder()
     .setName('config')
@@ -177,10 +176,12 @@ export const data = new SlashCommandBuilder()
                     })
             })
     })
+    .setDMPermission(false)
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
 export const admin = true
 
-export async function execute(interaction : CommandInteraction) {
+export async function execute(interaction : ChatInputCommandInteraction) {
     let config = interaction.client.settings.get(interaction.guild.id)
 
     const subCommandGroup = interaction.options.getSubcommandGroup(false)
@@ -191,7 +192,7 @@ export async function execute(interaction : CommandInteraction) {
         switch (subCommandGroup) {
             case 'excluded-channels':
                 const channel = interaction.options.getChannel('channel', true)
-                if (channel.type != "GUILD_TEXT") await interaction.reply({content: 'You can only exclude text channels', ephemeral: true})
+                if (channel.type != ChannelType.GuildText) await interaction.reply({content: 'You can only exclude text channels', ephemeral: true})
                 if (subCommand == 'add') {
                     interaction.client.settings.push(interaction.guild.id, channel.id, 'excludedChannels')
                     await interaction.reply({content: `${channel.toString()} has been excluded from XP counting`, ephemeral: true})
@@ -297,7 +298,7 @@ export async function execute(interaction : CommandInteraction) {
                             levelAlerts.enabled = enabled
                         }
                         if (channel != null) {
-                            if (channel.type == "GUILD_TEXT") {
+                            if (channel.type == ChannelType.GuildText) {
                                 levelAlerts.alertChannel = channel.id
                             } else {
                                 errors.push('You must choose a text channel!')

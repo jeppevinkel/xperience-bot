@@ -3,8 +3,8 @@ import fs from 'fs'
 import dotenv from 'dotenv'
 const weightedRandom = require('weighted-random')
 
-import {Client, CommandInteraction, Intents, Interaction, Snowflake, SnowflakeUtil} from 'discord.js'
-import { RegisterCommandsForAllGuilds, RegisterCommandsForGuild, UpdatePermissionsForGuild } from './utils/deployCommands'
+import {Client, CommandInteraction, GatewayIntentBits, Interaction, Snowflake, SnowflakeUtil} from 'discord.js'
+import { RegisterCommandsForAllGuilds, RegisterCommandsForGuild } from './utils/deployCommands'
 import Command from './models/command'
 import Event from './models/event'
 import Level from './models/level'
@@ -109,7 +109,7 @@ for (let i = 0; i < slicedLevels.length; i++) {
 //
 // process.exit()
 
-const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]})
+const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]})
 
 client.settings = new Enmap({
     name: 'settings',
@@ -142,24 +142,24 @@ client.levels = new Enmap({
     cloneLevel: 'deep'
 })
 
-client.on('roleUpdate', x => {
-    UpdatePermissionsForGuild(x.guild)
-        .catch(err => {
-            console.error('[roleUpdate]', err)
-        })
-})
-client.on('roleCreate', x => {
-    UpdatePermissionsForGuild(x.guild)
-        .catch(err => {
-            console.error('[roleCreate]', err)
-        })
-})
-client.on('roleDelete', x => {
-    UpdatePermissionsForGuild(x.guild)
-        .catch(err => {
-            console.error('[roleDelete]', err)
-        })
-})
+// client.on('roleUpdate', x => {
+//     UpdatePermissionsForGuild(x.guild)
+//         .catch((err: any) => {
+//             console.error('[roleUpdate]', err)
+//         })
+// })
+// client.on('roleCreate', x => {
+//     UpdatePermissionsForGuild(x.guild)
+//         .catch((err: any) => {
+//             console.error('[roleCreate]', err)
+//         })
+// })
+// client.on('roleDelete', x => {
+//     UpdatePermissionsForGuild(x.guild)
+//         .catch((err: any) => {
+//             console.error('[roleDelete]', err)
+//         })
+// })
 client.on('guildCreate', guild => {
     RegisterCommandsForGuild(guild)
         .catch(err => {
