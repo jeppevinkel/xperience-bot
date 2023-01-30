@@ -168,7 +168,7 @@ export const data = new SlashCommandBuilder()
                         return option
                             .setName('channel')
                             .setDescription('The channel where alerts are displayed')
-                            .addChannelTypes(ChannelType.GuildText | ChannelType.GuildAnnouncement)
+                            .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
                     })
                     .addStringOption(option => {
                         return option
